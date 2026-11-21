@@ -381,21 +381,6 @@ using JobApplicationTracker.UI;
 //	applicationService.ApplyForJob(1, 99)
 //);
 
-//////   -----------------------------------------      Test practice :) ------------------------------------------
-
-////collections test
-//CollectionsPractice.Run(data);
-
-//// Generic Method practice:
-//Job? job = GenericMethods.FindById(
-//	data.Jobs.GetAll(),
-//	1
-//);
-
-//if (job != null)
-//{
-//	Console.WriteLine($"Generic Method Result: {job.Title}");
-//}
 
 //////   -----------------------------------------      Test H2: implement undo status :) ------------------------------------------
 
@@ -433,6 +418,26 @@ using JobApplicationTracker.UI;
 //	companyService.UndoLastStatusChange()
 //);
 
+
+//////   -----------------------------------------      Test practice :) ------------------------------------------
+
+////           ---------------------------   collections test    ---------------------------
+//CollectionsPractice.Run(data);
+
+//// Generic Method practice:
+//Job? job = GenericMethods.FindById(
+//	data.Jobs.GetAll(),
+//	1
+//);
+
+//if (job != null)
+//{
+//	Console.WriteLine($"Generic Method Result: {job.Title}");
+//}
+
+////           ---------------------------   Delegates_LambdaExp test    ---------------------------
+Delegates_LambdaExp.Run();
+
 //------------------------------------------------------------- Finally :))  --------------------------------------------------------------------------------------
 
 
@@ -443,4 +448,4 @@ DataSeeder.Seed(data);
 
 ConsoleUI consoleUI = new ConsoleUI(data);
 
-consoleUI.Run();
+//consoleUI.Run();
