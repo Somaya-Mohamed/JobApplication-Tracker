@@ -91,6 +91,30 @@ namespace JobApplicationTracker.Services
 			}
 		}
 
+		public bool ApproveCompany(int id)
+		{
+			return ChangeCompanyStatus(id, CompanyStatus.Approved);
+		}
+
+		public bool RejectCompany(int id)
+		{
+			return ChangeCompanyStatus(id, CompanyStatus.Rejected);
+		}
+
+		public IEnumerable<Company> GetPendingCompanies()
+		{
+			return GetCompaniesByStatus(CompanyStatus.Pending);
+		}
+
+		public IEnumerable<Company> GetApprovedCompanies()
+		{
+			return GetCompaniesByStatus(CompanyStatus.Approved);
+		}
+
+		public IEnumerable<Company> GetRejectedCompanies()
+		{
+			return GetCompaniesByStatus(CompanyStatus.Rejected);
+		}
 
 	}
 }

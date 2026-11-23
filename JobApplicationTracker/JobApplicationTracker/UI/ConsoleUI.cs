@@ -95,9 +95,12 @@ namespace JobApplicationTracker.UI
 				Console.WriteLine("2. Update Company");
 				Console.WriteLine("3. List Companies");
 				Console.WriteLine("4. Remove Company");
-				Console.WriteLine("5. Change Company Status");
-				Console.WriteLine("6. List Companies By Status");
-				Console.WriteLine("7. Undo Last Status Change");
+				Console.WriteLine("5. Approve Company");
+				Console.WriteLine("6. Reject Company");
+				Console.WriteLine("7. List Pending Companies");
+				Console.WriteLine("8. List Approved Companies");
+				Console.WriteLine("9. List Rejected Companies");
+				Console.WriteLine("10. Undo Last Status Change");
 				Console.WriteLine("0. Back");
 
 				int choice = ReadInt("Choose an option: ");
@@ -121,19 +124,31 @@ namespace JobApplicationTracker.UI
 						break;
 
 					case 5:
-						ChangeCompanyStatus();
+						ApproveCompany();
 						break;
 
 					case 6:
-						ListCompaniesByStatus();
+						RejectCompany();
 						break;
 
 					case 7:
+						ListPendingCompanies();
+						break;
+
+					case 8:
+						ListApprovedCompanies();
+						break;
+
+					case 9:
+						ListRejectedCompanies();
+						break;
+
+					case 10:
 						ConsolePrinter.WriteResult(
-				_companyService.UndoLastStatusChange(),
-				"Status change undone successfully.",
-				"No status changes to undo."
-			);
+							_companyService.UndoLastStatusChange(),
+							"Status change undone successfully.",
+							"No status changes to undo."
+						);
 						break;
 
 					case 0:
@@ -229,6 +244,58 @@ namespace JobApplicationTracker.UI
 				"Company status changed successfully.",
 				"Could not change company status."
 			);
+		}
+
+		private void ApproveCompany()
+		{
+			int id = ReadInt("Company ID to approve: ");
+
+			ConsolePrinter.WriteResult(
+				_companyService.ApproveCompany(id),
+				"Company approved successfully.",
+				"Could not approve company. Check the ID or current status."
+			);
+		}
+
+		private void RejectCompany()
+		{
+			int id = ReadInt("Company ID to reject: ");
+
+			ConsolePrinter.WriteResult(
+				_companyService.RejectCompany(id),
+				"Company rejected successfully.",
+				"Could not reject company. Check the ID or current status."
+			);
+		}
+
+		private void ListPendingCompanies()
+		{
+			ConsolePrinter.WriteInfo("\nCompanies Waiting For Approval:");
+
+			foreach (Company company in _companyService.GetPendingCompanies())
+			{
+				Console.WriteLine($"{company.Id} - {company.Name} - {company.City}");
+			}
+		}
+
+		private void ListApprovedCompanies()
+		{
+			ConsolePrinter.WriteInfo("\nApproved Companies:");
+
+			foreach (Company company in _companyService.GetApprovedCompanies())
+			{
+				Console.WriteLine($"{company.Id} - {company.Name} - {company.City}");
+			}
+		}
+
+		private void ListRejectedCompanies()
+		{
+			ConsolePrinter.WriteInfo("\nRejected Companies:");
+
+			foreach (Company company in _companyService.GetRejectedCompanies())
+			{
+				Console.WriteLine($"{company.Id} - {company.Name} - {company.City}");
+			}
 		}
 
 		private void ListCompaniesByStatus()
