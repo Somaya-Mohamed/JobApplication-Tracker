@@ -18,14 +18,12 @@ namespace JobApplicationTracker.Data
 		{
 			if (entity == null)
 			{
-				//Console.WriteLine("Entity is null.");
 				return false;
 			}
 			foreach (var item in _items)
 			{
 				if (item.Id == entity.Id)
 				{
-					//Console.WriteLine("Entity with the same ID already exists.");
 					return false;
 				}
 			}
@@ -55,7 +53,6 @@ namespace JobApplicationTracker.Data
 		{
 			if (entity == null)
 			{
-				//Console.WriteLine("Entity is null.");
 				return false;
 			}
 
@@ -68,8 +65,31 @@ namespace JobApplicationTracker.Data
 				}
 			}
 
-			//Console.WriteLine("Entity not found.");
 			return false;
+		}
+
+		public List<T> Find(Predicate<T> match)
+		{
+			List<T> matchedList = new List<T>();
+
+			foreach (var item in _items)
+			{
+				if (match(item))
+				{
+					matchedList.Add(item);
+				}
+			}
+			return matchedList;
+		}
+
+
+		public List<T> Sort(Comparison<T> comparison)
+		{
+			List<T> sortededList = _items;
+			sortededList.Sort(comparison);
+
+			return sortededList;
+
 		}
 
 		public bool RemoveById(int id)
@@ -77,7 +97,6 @@ namespace JobApplicationTracker.Data
 			T? entity = GetById(id);
 			if (entity == null)
 			{
-				//Console.WriteLine("Entity is null.");
 				return false;
 			}
 

@@ -78,6 +78,45 @@ namespace JobApplicationTracker.Services
 			return true;
 		}
 
+		public List<Job> SearchByTitle(string titleKeyWord)
+		{
+			return _data.Jobs.Find(job =>
+				job.Title.Contains(titleKeyWord, StringComparison.OrdinalIgnoreCase));
+		}
+
+		public List<Job> SearchByMinimumSalary(decimal minimumSalary)
+		{
+			return _data.Jobs.Find(job =>
+			job.Salary >= minimumSalary);
+		}
+
+		public List<Job> SearchJobs(string titleKeyWord, decimal minimumSalary)
+		{
+			return _data.Jobs.Find(job =>
+			job.Title.Contains(titleKeyWord, StringComparison.OrdinalIgnoreCase)
+			&& job.Salary >= minimumSalary
+			&& job.IsOpen);
+		}
+
+		public List<Job> SortBySalaryAscending()
+		{
+			return _data.Jobs.Sort((job1, job2) =>
+			job1.Salary.CompareTo(job2.Salary));
+		}
+
+		public List<Job> SortBySalaryDescending()
+		{
+			return _data.Jobs.Sort((job1, job2) =>
+			job2.Salary.CompareTo(job1.Salary));
+		}
+
+		public List<Job> SortByTitleAlphabetically()
+		{
+			return _data.Jobs.Sort((job1, job2) =>
+			string.Compare(job1.Title, job2.Title, StringComparison.OrdinalIgnoreCase));
+		}
+
+
 
 	}
 }

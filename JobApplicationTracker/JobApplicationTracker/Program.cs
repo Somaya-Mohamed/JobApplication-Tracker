@@ -419,7 +419,139 @@ using JobApplicationTracker.UI;
 //);
 
 
+//////   -----------------------------------------      Test M3 : Search & Sort jobs :) ------------------------------------------
+
+Console.WriteLine("\n========== M3: Search & Sort Tests ==========");
+
+// 1. Prepare Test Data
+AppData testData = new AppData();
+JobService jobService = new JobService(testData);
+
+testData.Companies.Add(new Company
+{
+	Id = 1,
+	Name = "Test Company",
+	Status = CompanyStatus.Approved
+});
+
+// 2. Add Test Jobs
+jobService.AddJob(new Job
+{
+	Id = 101,
+	Title = "Backend Developer",
+	Salary = 15000,
+	IsOpen = true,
+	CompanyId = 1
+});
+
+jobService.AddJob(new Job
+{
+	Id = 102,
+	Title = "Frontend Developer",
+	Salary = 10000,
+	IsOpen = true,
+	CompanyId = 1
+});
+
+jobService.AddJob(new Job
+{
+	Id = 103,
+	Title = "Senior Backend Engineer",
+	Salary = 20000,
+	IsOpen = true,
+	CompanyId = 1
+});
+
+jobService.AddJob(new Job
+{
+	Id = 104,
+	Title = "UI Designer",
+	Salary = 12000,
+	IsOpen = false,
+	CompanyId = 1
+});
+
+// 3. Search By Title
+Console.WriteLine("\n--- Search By Title: Backend ---");
+
+List<Job> titleResults = jobService.SearchByTitle("backend");
+
+foreach (var job in titleResults)
+{
+	Console.WriteLine($"{job.Title} - {job.Salary}");
+}
+
+Console.WriteLine($"Results Count: {titleResults.Count}");
+
+// 4. Search By Minimum Salary
+Console.WriteLine("\n--- Minimum Salary: 12000 ---");
+
+List<Job> salaryResults = jobService.SearchByMinimumSalary(12000);
+
+foreach (var job in salaryResults)
+{
+	Console.WriteLine($"{job.Title} - {job.Salary}");
+}
+
+Console.WriteLine($"Results Count: {salaryResults.Count}");
+
+// 5. Combine Search Filters
+Console.WriteLine("\n--- Backend + Minimum Salary 12000 + Open ---");
+
+List<Job> combinedResults = jobService.SearchJobs("backend", 12000);
+
+foreach (var job in combinedResults)
+{
+	Console.WriteLine($"{job.Title} - {job.Salary}");
+}
+
+Console.WriteLine($"Results Count: {combinedResults.Count}");
+
+// 6. Sort By Salary Ascending
+Console.WriteLine("\n--- Salary Ascending ---");
+
+List<Job> ascendingJobs = jobService.SortBySalaryAscending();
+
+foreach (var job in ascendingJobs)
+{
+	Console.WriteLine($"{job.Title} - {job.Salary}");
+}
+
+// 7. Sort By Salary Descending
+Console.WriteLine("\n--- Salary Descending ---");
+
+List<Job> descendingJobs = jobService.SortBySalaryDescending();
+
+foreach (var job in descendingJobs)
+{
+	Console.WriteLine($"{job.Title} - {job.Salary}");
+}
+
+// 8. Sort By Title
+Console.WriteLine("\n--- Title Alphabetically ---");
+
+List<Job> alphabeticalJobs = jobService.SortByTitleAlphabetically();
+
+foreach (var job in alphabeticalJobs)
+{
+	Console.WriteLine(job.Title);
+}
+
+// 9. Check Original Store
+Console.WriteLine("\n--- Original Store After Sorting ---");
+
+foreach (var job in testData.Jobs.GetAll())
+{
+	Console.WriteLine($"{job.Title} - {job.Salary}");
+}
+
+Console.WriteLine("\n========== M3 Tests Finished ==========");
+
+
+
+//**************************************************************************************************************************************************
 //////   -----------------------------------------      Test practice :) ------------------------------------------
+//**************************************************************************************************************************************************
 
 ////           ---------------------------   collections Practice test    ---------------------------
 //CollectionsPractice.Run(data);
@@ -439,17 +571,19 @@ using JobApplicationTracker.UI;
 //Delegates_LambdaExp.Run();
 
 ////           ---------------------------   Events Practice test    ---------------------------
-Events.Run();
+//Events.Run();
 
 
 
+
+//**************************************************************************************************************************************************
 //------------------------------------------------------------- Finally our Project Run :))  --------------------------------------------------------------------------------------
+//**************************************************************************************************************************************************
 
+//AppData data = new AppData();
 
-AppData data = new AppData();
+//DataSeeder.Seed(data);
 
-DataSeeder.Seed(data);
-
-ConsoleUI consoleUI = new ConsoleUI(data);
+//ConsoleUI consoleUI = new ConsoleUI(data);
 
 //consoleUI.Run();
