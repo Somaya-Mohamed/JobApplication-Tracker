@@ -7,7 +7,7 @@ using System.Text;
 
 namespace JobApplicationTracker.Practice
 {
-	public static class CollectionsPractice
+	public static class Collections
 	{
 		public static void Run(AppData appData)
 		{

@@ -421,7 +421,7 @@ using JobApplicationTracker.UI;
 
 //////   -----------------------------------------      Test practice :) ------------------------------------------
 
-////           ---------------------------   collections test    ---------------------------
+////           ---------------------------   collections Practice test    ---------------------------
 //CollectionsPractice.Run(data);
 
 //// Generic Method practice:
@@ -435,11 +435,15 @@ using JobApplicationTracker.UI;
 //	Console.WriteLine($"Generic Method Result: {job.Title}");
 //}
 
-////           ---------------------------   Delegates_LambdaExp test    ---------------------------
-Delegates_LambdaExp.Run();
+////           ---------------------------   Delegates_LambdaExp Practice test    ---------------------------
+//Delegates_LambdaExp.Run();
 
-//------------------------------------------------------------- Finally :))  --------------------------------------------------------------------------------------
+////           ---------------------------   Events Practice test    ---------------------------
+Events.Run();
 
+
+
+//------------------------------------------------------------- Finally our Project Run :))  --------------------------------------------------------------------------------------
 
 
 AppData data = new AppData();
