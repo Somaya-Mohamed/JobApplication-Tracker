@@ -32,8 +32,7 @@ namespace JobApplicationTracker.Services
 
 			var applicationKey = (JobId: jobId, CandidateId: candidateId);
 			//if (_data.AppliedJobs.Contains(applicationKey))
-			//	return false;
-			if (!_data.AppliedJobs.Add(applicationKey))
+			if (!_data.AppliedJobs.Add(applicationKey)) //M4 — Duplicate Application Protection ALREADY DONE :))
 				return false;
 
 			Application application = new Application
