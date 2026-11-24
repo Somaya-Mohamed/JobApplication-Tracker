@@ -560,10 +560,18 @@ namespace JobApplicationTracker.UI
 		{
 			int id = ReadInt("Job ID to remove: ");
 
+			Job? job = _jobService.GetJobById(id);
+
+			if (job == null)
+			{
+				ConsolePrinter.WriteWarning("Job not found.");
+				return;
+			}
+
 			ConsolePrinter.WriteResult(
 				_jobService.RemoveJobById(id),
 				"Job removed successfully.",
-				"Job not found."
+				"Cannot remove this job because it has existing applications."
 			);
 		}
 

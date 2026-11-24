@@ -69,6 +69,12 @@ namespace JobApplicationTracker.Services
 			if (ExistingJob == null)
 				return false;
 
+			foreach (Application application in _data.Applications.GetAll())
+			{
+				if (application.JobId == id)
+					return false;
+			}
+
 			bool IsRemoved = _data.Jobs.RemoveById(id);
 			if (!IsRemoved)
 				return false;

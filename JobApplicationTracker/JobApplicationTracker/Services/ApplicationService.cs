@@ -31,7 +31,9 @@ namespace JobApplicationTracker.Services
 				return false;
 
 			var applicationKey = (JobId: jobId, CandidateId: candidateId);
-			if (_data.AppliedJobs.Contains(applicationKey))
+			//if (_data.AppliedJobs.Contains(applicationKey))
+			//	return false;
+			if (!_data.AppliedJobs.Add(applicationKey))
 				return false;
 
 			Application application = new Application
@@ -45,10 +47,15 @@ namespace JobApplicationTracker.Services
 
 			bool IsAdded = _data.Applications.Add(application);
 			if (!IsAdded)
+			{
+				_data.AppliedJobs.Remove(applicationKey);
 				return false;
 
-			_data.AppliedJobs.Add(applicationKey);
+			}
+
+			//_data.AppliedJobs.Add(applicationKey);
 			return true;
+
 
 		}
 		
