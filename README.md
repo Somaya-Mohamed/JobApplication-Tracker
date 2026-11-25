@@ -1,179 +1,216 @@
-# Job Application Tracker – Sprint 1
+# Job Application Tracker
 
-A console-based Job Application Tracker built with C# and .NET. The project manages companies, recruiters, jobs, candidates, and job applications using in-memory collections and generic data storage.
+A C# Console Application for managing companies, recruiters, job vacancies, candidates, and job applications.
+
+This project is developed incrementally across multiple sprints, focusing on C# fundamentals, object-oriented programming, collections, generics, delegates, events, and clean code organization.
 
 ## Project Overview
 
-The Job Application Tracker is designed to simulate a simple recruitment management system.
+Job Application Tracker simulates a simple job portal workflow:
 
-It allows users to manage recruitment data through a console menu while applying basic business rules and practicing C# collections, generics, and object-oriented programming.
+- Companies register and wait for admin approval.
+- Recruiters manage job vacancies.
+- Candidates browse and apply for available jobs.
+- The system validates business rules and prevents invalid or duplicate operations.
+- Event-driven notifications respond to important business operations, such as company approval and application status updates.
 
-**Sprint 1 focuses on:**
-- Generic data storage.
-- Managing entities using collections.
-- Implementing basic CRUD operations.
-- Applying business rules.
-- Keeping related collections synchronized.
-- Handling invalid user input safely.
-
-## Technologies Used
-
-- C#
-- .NET
-- Object-Oriented Programming (OOP)
-- Generics
-- Collections:
-  - `List<T>`
-  - `Dictionary<TKey, TValue>`
-  - `HashSet<T>`
-  - `Stack<T>`
+All data is stored in memory and is reset when the application restarts.
 
 ## Features
 
-### 1. Company Management
-- Add, update, view, and remove companies.
-- Manage company statuses:
-  - Pending
-  - Approved
-  - Rejected
-- Filter companies by status.
-- Undo the last company status change using a Stack.
+### Companies
+- Add, update, list, and remove companies.
+- Manage company statuses: Pending, Approved, and Rejected.
+- List companies by status.
+- Undo the most recent status change using a Stack.
+- Allow job creation only for approved companies.
+- Trigger an event when a company is approved.
 
-### 2. Recruiter Management
-- Add, update, view, and remove recruiters.
+### Recruiters
+- Add, update, list, and remove recruiters.
 - Associate recruiters with existing companies.
 
-### 3. Job Management
-- Add, update, view, and remove jobs.
+### Jobs
+- Add, update, list, search, and remove jobs.
 - Find jobs by ID using a Dictionary.
-- Keep the jobs DataStore and Dictionary synchronized.
-- Prevent companies with Pending or Rejected status from posting new jobs.
+- Search jobs by title keyword and minimum salary.
+- Combine search filters.
+- Sort jobs by salary (ascending or descending) and title.
+- Keep the Jobs DataStore and Dictionary synchronized.
+- Prevent removing jobs that have existing applications.
 
-### 4. Candidate Management
-- Add, update, view, and remove candidates.
+### Candidates
+- Add, update, list, and remove candidates.
 - Prevent duplicate email addresses.
-- Email comparison is case-insensitive.
+- Compare emails case-insensitively using a HashSet.
 
-### 5. Application Management
-- Apply for available jobs.
-- Prevent duplicate applications for the same job and candidate.
-- Allow applications only for open jobs belonging to Approved companies.
-- Update application statuses.
-- Remove applications while keeping the applied-jobs HashSet synchronized.
+### Applications
+- Apply for open jobs.
+- Validate candidate and job existence.
+- Allow applications only when the job's company is approved.
+- Prevent duplicate applications by the same candidate for the same job.
+- Manage application statuses.
+- Keep the applied-jobs HashSet synchronized when applications are removed.
+- Trigger events when applications are submitted or their statuses change.
 
-### 6. Input Validation
-- Handle invalid numeric input safely.
-- Validate required fields.
-- Prevent invalid operations from crashing the application.
+### Event-Driven Notifications
+- Use `EventHandler<TEventArgs>` to define strongly typed events.
+- Create custom EventArgs classes to carry event data.
+- Subscribe to events using named handler methods and lambda expressions.
+- Unsubscribe from events when needed.
+- Display notifications for company approval, application submission, and application status changes.
 
-## Collections Usage
+### Console User Interface
+- Main menu and separate menus for each entity.
+- Colored titles, prompts, success messages, warnings, and errors.
+- Centralized console formatting through `ConsolePrinter`.
+- Safe input handling for integers, decimals, text, Boolean values, and enum values.
 
-| Collection | Purpose |
-|---|---|
-| `List<T>` | Stores entities inside the generic DataStore. |
-| `Dictionary<int, Job>` | Provides fast job lookup by ID. |
-| `HashSet<string>` | Prevents duplicate candidate emails. |
-| `HashSet<(int JobId, int CandidateId)>` | Prevents duplicate job applications. |
-| `Stack<(int CompanyId, CompanyStatus OldStatus)>` | Stores previous company statuses to support undo. |
+## Technologies & Concepts
+
+- C# and .NET Console Application
+- Object-Oriented Programming (OOP)
+- Interfaces and Generic Constraints
+- Generic DataStore
+- Collections: List, Dictionary, HashSet, and Stack
+- IEnumerable and yield return
+- Delegates: Func, Action, Predicate, and Comparison
+- Lambda Expressions
+- Events and `EventHandler<TEventArgs>`
+- Custom EventArgs
+- Event Subscription and Unsubscription
+- In-memory data storage
+- Service-based organization
+- Search and sorting without LINQ
+- Console input validation and exception handling
 
 ## Project Structure
 
 ```text
 JobApplicationTracker/
-│
 ├── Data/
 │   ├── AppData.cs
 │   ├── DataSeeder.cs
 │   └── DataStore.cs
-│
 ├── Enums/
 │   ├── ApplicationStatus.cs
 │   └── CompanyStatus.cs
-│
+├── Events/
+│   ├── ApplicationStatusChangedEventArgs.cs
+│   ├── ApplicationSubmittedEventArgs.cs
+│   └── CompanyApprovedEventArgs.cs
 ├── Helpers/
 │   └── ConsolePrinter.cs
-│
 ├── Interfaces/
 │   └── IEntity.cs
-│
 ├── Models/
 │   ├── Application.cs
 │   ├── Candidate.cs
 │   ├── Company.cs
 │   ├── Job.cs
 │   └── Recruiter.cs
-│
+├── Practice/
+│   ├── CollectionsPractice.cs
+│   ├── GenericMethods.cs
+│   ├── Delegates.cs
+│   └── Events.cs
 ├── Services/
 │   ├── ApplicationService.cs
 │   ├── CandidateService.cs
 │   ├── CompanyService.cs
 │   ├── JobService.cs
-│   └── RecruiterService.cs
-│
+│   ├── RecruiterService.cs
+│   └── NotificationService.cs
 ├── UI/
 │   └── ConsoleUI.cs
-│
 └── Program.cs
 ```
 
-## Seed Data
+## Getting Started
 
-The application starts with predefined sample data:
+### Prerequisites
+- Visual Studio or another C# IDE.
+- A .NET SDK compatible with the project's target framework.
 
-- 3 Companies
-- 3 Recruiters
-- 6 Jobs
-- 5 Candidates
-
-This data is initialized through `DataSeeder` to make the application ready for testing.
-
-## How to Run
+### Run the Application
 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Somaya-Mohamed/JobApplicationTracker
+git clone YOUR_REPOSITORY_URL
 ```
 
 2. Open the solution in Visual Studio.
+3. Build the solution.
+4. Run the project.
 
-3. Build the project.
+The application seeds initial data automatically when it starts. No database configuration is required.
 
-4. Run the application.
+## Sprint 1 — Core Console Application
 
-The main console menu will appear, allowing you to navigate through the available operations.
+- Models and enums.
+- Generic DataStore implementation.
+- Seed data.
+- Basic entity operations.
+- Dictionary-based job lookup.
+- Case-insensitive candidate email uniqueness.
+- Duplicate application prevention.
+- Undo company status changes.
+- Console menus and colored output.
+- Safe input handling.
 
-## Sprint 1 Scope
+## Sprint 2 — Advanced C# and Application Workflows
 
-This sprint focuses on in-memory data management and C# collections.
+- Delegates: Func, Action, Predicate, and Comparison.
+- Lambda Expressions.
+- Search and sorting using delegates and collections without LINQ.
+- Company approval workflow and status management.
+- Application workflow and business-rule validation.
+- Duplicate application protection.
+- Event-driven notifications using EventHandler and custom EventArgs.
+- Named event handlers, lambda subscriptions, and unsubscription.
 
-**Included:**
-- E1 – Entity models and enums.
-- E2 – Console menus and navigation.
-- E3 – Basic entity operations.
-- E5 – Job lookup using Dictionary.
-- M1 – Generic DataStore.
-- H1 – Prevent duplicate applications using HashSet.
-- H2 – Undo company status changes using Stack.
+## Git Workflow
 
-**Out of Scope:**
-- Database integration.
-- Entity Framework Core.
-- LINQ.
-- Authentication and authorization.
-- Web API implementation.
+Check the current working tree:
+
+```bash
+git status
+```
+
+Stage and commit completed work:
+
+```bash
+git add .
+git commit -m "Describe the completed requirement"
+```
+
+Push commits:
+
+```bash
+git push
+```
+
+After completing a sprint, create and push its tag:
+
+```bash
+git tag sprint-1
+git push origin sprint-1
+```
+
+For Sprint 2:
+
+```bash
+git tag sprint-2
+git push origin sprint-2
+```
 
 ## Important Notes
 
-- All application data is stored in memory.
-- Data is reset when the application is restarted.
-- No database is connected in this sprint.
-- The project is developed incrementally through requirement-based Git commits.
+- No database or Entity Framework is used in the current console application.
+- LINQ is intentionally not used in the project implementation.
+- All data is stored in memory and is reset when the application restarts.
 
-## Author
+---
 
-**Somaya Mohamed**
-
-.NET Backend Developer
-
-[GitHub](https://github.com/Somaya-Mohamed) · [Portfolio](https://somaya-mohamed.github.io/My-portfolio/)
+**Job Application Tracker — Sprint 1 & Sprint 2**
