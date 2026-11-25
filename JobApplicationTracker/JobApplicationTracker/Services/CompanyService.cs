@@ -1,5 +1,6 @@
 ﻿using JobApplicationTracker.Data;
 using JobApplicationTracker.Enums;
+using JobApplicationTracker.Events;
 using JobApplicationTracker.Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace JobApplicationTracker.Services
 		{
 			_data = data;
 		}
+
+		public event EventHandler<CompanyApprovedEventArgs>? CompanyApprovedEvent;
 
 		public bool AddCompany(Company company)
 		{
@@ -93,7 +96,20 @@ namespace JobApplicationTracker.Services
 
 		public bool ApproveCompany(int id)
 		{
-			return ChangeCompanyStatus(id, CompanyStatus.Approved);
+			Company? company = _data.Companies.GetById(id);
+
+			if (company == null || company.Status != CompanyStatus.Pending)
+				return false;
+
+			bool IsApproved = ChangeCompanyStatus(id, CompanyStatus.Approved);
+
+			if (!IsApproved)
+				return false;
+
+			CompanyApprovedEventArgs args = new CompanyApprovedEventArgs(company.Id, company.Name);
+			CompanyApprovedEvent?.Invoke(this, args);
+
+			return true;
 		}
 
 		public bool RejectCompany(int id)

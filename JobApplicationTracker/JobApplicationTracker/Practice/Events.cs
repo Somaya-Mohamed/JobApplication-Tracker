@@ -47,8 +47,12 @@ namespace JobApplicationTracker.Practice
 			//// Event using Custom Delegate
 			//public event StockPriceHandler OnStockPriceChangedEvent;
 
-			// Event using EventHandler
-			 public event EventHandler<StockPriceChangedEventArgs> OnStockPriceChangedEvent;
+			// Event using EventHandler => take (sender, event args) and this will use at invoke event and at signature for method that will subscribe
+			// Event using EventHandler<TEventArgs>:
+			// It follows the (sender, e) pattern.
+			// These parameters are used when raising the event
+			// and in the signature of the handler method that subscribes to it.
+			public event EventHandler<StockPriceChangedEventArgs> OnStockPriceChangedEvent;
 
 			public string Name => name;
 

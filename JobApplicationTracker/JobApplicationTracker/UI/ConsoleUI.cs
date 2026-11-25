@@ -1,7 +1,8 @@
 ﻿using JobApplicationTracker.Data;
 using JobApplicationTracker.Enums;
-using JobApplicationTracker.Interfaces;
+using JobApplicationTracker.Events;
 using JobApplicationTracker.Helpers;
+using JobApplicationTracker.Interfaces;
 using JobApplicationTracker.Models;
 using JobApplicationTracker.Services;
 using System;
@@ -18,6 +19,7 @@ namespace JobApplicationTracker.UI
 		private readonly JobService _jobService;
 		private readonly CandidateService _candidateService;
 		private readonly ApplicationService _applicationService;
+		private readonly NotificationService _notificationService;
 
 		public ConsoleUI(AppData data)
 		{
@@ -28,6 +30,19 @@ namespace JobApplicationTracker.UI
 			_jobService = new JobService(data);
 			_candidateService = new CandidateService(data);
 			_applicationService = new ApplicationService(data);
+			_notificationService = new NotificationService();
+
+			_companyService.CompanyApprovedEvent += _notificationService.OnCompanyApproved;
+			_applicationService.ApplicationSubmittedEvent += _notificationService.OnApplicationSubmitted;
+			_applicationService.ApplicationStatusChangedEvent += _notificationService.OnApplicationStatusChanged;
+
+			//Lambda Subscription & unSubscription::
+			EventHandler<CompanyApprovedEventArgs> handler = (sender, e) =>
+			{
+				Console.WriteLine($"Lambda: {e.CompanyName} approved!");
+			};
+			_companyService.CompanyApprovedEvent += handler;
+			_companyService.CompanyApprovedEvent -= handler;
 		}
 
 		// ==================== Main Menu ====================
@@ -763,23 +778,14 @@ namespace JobApplicationTracker.UI
 		private void UpdateApplicationStatus()
 		{
 			int id = ReadInt("Application ID: ");
-			Application? application = _data.Applications.GetById(id);
-
-			if (application == null)
-			{
-				ConsolePrinter.WriteWarning("Application not found.");
-				return;
-			}
 
 			ApplicationStatus status =
 				ReadEnum<ApplicationStatus>("New status: ");
 
-			application.Status = status;
-
 			ConsolePrinter.WriteResult(
-				_data.Applications.Update(application),
+				_applicationService.ChangeApplicationStatus(id, status),
 				"Application status updated successfully.",
-				"Could not update application."
+				"Could not update application. Check the ID or current status."
 			);
 		}
 

@@ -1,5 +1,6 @@
 ﻿using JobApplicationTracker.Data;
 using JobApplicationTracker.Enums;
+using JobApplicationTracker.Events;
 using JobApplicationTracker.Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,9 @@ namespace JobApplicationTracker.Services
 		{
 			_data = data;
 		}
+
+		public event EventHandler<ApplicationSubmittedEventArgs>? ApplicationSubmittedEvent;
+		public event EventHandler<ApplicationStatusChangedEventArgs>? ApplicationStatusChangedEvent;
 
 		public bool ApplyForJob(int jobId, int candidateId)
 		{
@@ -53,6 +57,10 @@ namespace JobApplicationTracker.Services
 			}
 
 			//_data.AppliedJobs.Add(applicationKey);
+
+			ApplicationSubmittedEventArgs args = new ApplicationSubmittedEventArgs(application.Id, application.JobId, application.CandidateId);
+			ApplicationSubmittedEvent?.Invoke(this, args);
+
 			return true;
 
 
@@ -68,6 +76,32 @@ namespace JobApplicationTracker.Services
 			}
 
 			return maxId + 1;
+		}
+
+		public bool ChangeApplicationStatus(int applicationId, ApplicationStatus newStatus)
+		{
+			Application? application = _data.Applications.GetById(applicationId);
+
+			if (application == null || application.Status == newStatus)
+				return false;
+
+			ApplicationStatus oldStatus = application.Status;
+
+			application.Status = newStatus;
+
+			bool IsUpdated = _data.Applications.Update(application);
+
+			if (!IsUpdated)
+			{
+				application.Status = oldStatus;
+				return false;
+			}
+
+			ApplicationStatusChangedEventArgs args = new ApplicationStatusChangedEventArgs(application.Id, oldStatus, newStatus);
+			ApplicationStatusChangedEvent?.Invoke(this, args);
+
+			return true;
+
 		}
 
 		public bool RemoveApplicationById(int id)
